@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>縁結びおみくじ</title>
+  <style>
+    :root{
+      --ink:#2b1f12;
+      --pink:#ff4d6d;
+      --crimson:#b3121b;
+      --sakura1:#fff1f6;
+      --sakura2:#f7d6e2;
+      --paper:#fffafc;
+      --line:rgba(43,31,18,.14);
+      --shadow:rgba(0,0,0,.12);
+    }
+    body{
+      margin:0; min-height:100vh;
+      display:grid; place-items:center;
+      text-align:center;
+      font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 20% 10%, rgba(255,255,255,.65), transparent 45%),
+        radial-gradient(circle at 80% 20%, rgba(255,255,255,.55), transparent 55%),
+        radial-gradient(circle at 25% 75%, rgba(255,77,109,.18), transparent 55%),
+        linear-gradient(180deg, var(--sakura1), var(--sakura2));
+      overflow-x:hidden;
+    }
+
+    .petals{ position:fixed; inset:-10px; pointer-events:none; opacity:.35; filter: blur(.2px); }
+    .petal{
+      position:absolute; width:28px; height:22px;
+      background: radial-gradient(circle at 30% 30%, #fff, rgba(255,77,109,.65));
+      border-radius: 20px 20px 20px 6px;
+      transform: rotate(15deg);
+      box-shadow: 0 10px 16px rgba(0,0,0,.08);
+      opacity:.65;
+    }
+    .petal.p1{ left:6%; top:12%; transform:rotate(28deg); }
+    .petal.p2{ left:86%; top:18%; transform:rotate(-14deg); width:24px; height:19px; }
+    .petal.p3{ left:14%; top:78%; transform:rotate(12deg); width:26px; height:20px; }
+    .petal.p4{ left:82%; top:78%; transform:rotate(36deg); width:30px; height:24px; }
+
+    .card{
+      width:min(92vw, 680px);
+      background: rgba(255,255,255,.68);
+      border: 2px solid rgba(179,18,27,.18);
+      border-radius: 22px;
+      box-shadow: 0 16px 36px var(--shadow);
+      padding: 26px 22px 24px;
+      position:relative;
+      overflow:hidden;
+      backdrop-filter: blur(3px);
+    }
+    .ribbon{
+      position:absolute; left:-30px; top:18px;
+      width:220px; height:44px;
+      background: linear-gradient(90deg, var(--crimson), var(--pink));
+      transform: rotate(-8deg);
+      box-shadow: 0 10px 18px rgba(0,0,0,.14);
+      border-radius: 12px; opacity:.95;
+    }
+    .ribbon::after{
+      content:"縁結び";
+      position:absolute; right:18px; top:50%;
+      transform: translateY(-50%);
+      color:#fff; letter-spacing:.25em;
+      font-size:14px; font-weight:700;
+      text-shadow: 0 2px 8px rgba(0,0,0,.2);
+    }
+
+    .torii{ margin: 8px auto 10px; width:100%; display:grid; place-items:center; gap:10px; }
+    .bar{
+      width:76%; height:12px; border-radius:10px;
+      background: linear-gradient(90deg, var(--crimson), var(--pink), var(--crimson));
+      box-shadow: 0 6px 14px rgba(0,0,0,.12);
+    }
+    .pillars{ width:70%; display:flex; justify-content:space-between; }
+    .pillar{
+      width:16px; height:34px; border-radius:10px;
+      background: linear-gradient(180deg, var(--crimson), var(--pink));
+      box-shadow: 0 6px 14px rgba(0,0,0,.10);
+    }
+
+    h1{ margin:10px 0 6px; font-size:28px; letter-spacing:.10em; }
+    .sub{ margin:0 0 16px; font-size:14px; opacity:.9; }
+
+    /* ボタン */
+    .btnRow{
+      display:flex;
+      justify-content:center;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-bottom: 10px;
+    }
+    button{
+      border:none; cursor:pointer; font-family:inherit;
+      font-size:16px; padding:12px 18px; border-radius:999px;
+      color:#fff;
+      background: linear-gradient(180deg, var(--pink), var(--crimson));
+      box-shadow: 0 12px 18px rgba(0,0,0,.18);
+      transition: transform .06s ease, filter .15s ease;
+      position:relative;
+    }
+    button::before{ content:"❤"; margin-right:.6em; opacity:.95; }
+    button:hover{ filter: brightness(1.06); }
+    button:active{ transform: translateY(2px); }
+
+    .secondary{
+      background: linear-gradient(180deg, rgba(43,31,18,.55), rgba(43,31,18,.85));
+    }
+    .secondary::before{ content:"↺"; }
+
+    /* ===== 巫女さん ===== */
+    .mikoWrap{
+      width: 100%;
+      display:flex;
+      justify-content:center;
+      margin: 8px 0 2px;
+      min-height: 92px;
+    }
+    .miko{
+      display:flex;
+      align-items:flex-end;
+      gap:12px;
+      opacity:0;
+      transform: translateY(14px) scale(.98);
+      pointer-events:none;
+    }
+    .miko.show{
+      animation: mikoIn .45s cubic-bezier(.2,.9,.2,1.05) both;
+    }
+    @keyframes mikoIn{
+      from{ opacity:0; transform: translateY(16px) scale(.98); }
+      to{ opacity:1; transform: translateY(0) scale(1); }
+    }
+
+    .mikoAvatar{
+      width:70px;
+      height:78px;
+      position:relative;
+      filter: drop-shadow(0 10px 14px rgba(0,0,0,.12));
+    }
+    .hair{
+      position:absolute;
+      left:10px; top:10px;
+      width:50px; height:38px;
+      background: radial-gradient(circle at 30% 30%, #444, #111);
+      border-radius: 18px 18px 22px 22px;
+    }
+    .face{
+      position:absolute;
+      left:18px; top:18px;
+      width:34px; height:30px;
+      background: radial-gradient(circle at 30% 30%, #fff7e7, #f2d7bf);
+      border-radius: 14px 14px 16px 16px;
+      box-shadow: inset 0 2px 0 rgba(255,255,255,.45);
+    }
+    .sideL,.sideR{
+      position:absolute;
+      top:26px;
+      width:10px; height:22px;
+      background: #151515;
+      border-radius: 10px;
+    }
+    .sideL{ left:12px; }
+    .sideR{ right:12px; }
+
+    /* 目・口（表情3パターン） */
+    .eyes{
+      position:absolute;
+      left:22px; top:28px;
+      width:26px; height:10px;
+    }
+    .eye{
+      position:absolute;
+      width:6px; height:6px;
+      background:#2b1f12;
+      border-radius:50%;
+      top:2px;
+    }
+    .eye.left{ left:2px; }
+    .eye.right{ right:2px; }
+    .mouth{
+      position:absolute;
+      left:50%;
+      top:38px;
+      width:14px; height:8px;
+      border: 2px solid transparent;
+      transform: translateX(-50%);
+    }
+
+    /* 表情：にっこり */
+    .expr-smile .eye{ height:2px; border-radius:999px; top:4px; background:#2b1f12; }
+    .expr-smile .mouth{
+      border-color: transparent transparent #b3121b transparent;
+      border-radius: 0 0 12px 12px;
+      height:10px;
+      top:37px;
+    }
+
+    /* 表情：通常 */
+    .expr-neutral .mouth{
+      width:14px; height:2px;
+      background: rgba(43,31,18,.65);
+      border-radius: 999px;
+      top:39px;
+    }
+
+    /* 表情：びっくり（O口） */
+    .expr-surprise .eye{ width:6px; height:6px; border-radius:50%; top:2px; }
+    .expr-surprise .mouth{
+      width:8px; height:8px;
+      border: 2px solid rgba(179,18,27,.75);
+      border-radius: 50%;
+      top:37px;
+    }
+
+    .top{
+      position:absolute;
+      left:12px; top:42px;
+      width:46px; height:22px;
+      background: linear-gradient(180deg, #ffffff, #f2f2f2);
+      border-radius: 10px;
+      border: 1px solid rgba(43,31,18,.10);
+    }
+    .skirt{
+      position:absolute;
+      left:10px; top:58px;
+      width:50px; height:22px;
+      background: linear-gradient(180deg, var(--pink), var(--crimson));
+      border-radius: 10px 10px 14px 14px;
+      border: 1px solid rgba(179,18,27,.25);
+    }
+    .paperMini{
+      position:absolute;
+      right:-6px; top:50px;
+      width:18px; height:26px;
+      background: linear-gradient(180deg, var(--paper), rgba(255,255,255,.75));
+      border: 1px solid rgba(43,31,18,.14);
+      border-radius: 6px;
+      transform: rotate(-10deg);
+      box-shadow: 0 6px 12px rgba(0,0,0,.12);
+    }
+
+    .mikoBubble{
+      max-width: 500px;
+      background: rgba(255,255,255,.78);
+      border: 1px solid rgba(179,18,27,.18);
+      border-radius: 16px;
+      padding: 10px 12px;
+      text-align:left;
+      box-shadow: 0 10px 18px rgba(0,0,0,.08);
+      position:relative;
+      line-height:1.55;
+    }
+    .mikoBubble::before{
+      content:"";
+      position:absolute;
+      left:-8px;
+      bottom:18px;
+      width:16px; height:16px;
+      background: rgba(255,255,255,.78);
+      border-left: 1px solid rgba(179,18,27,.18);
+      border-bottom: 1px solid rgba(179,18,27,.18);
+      transform: rotate(45deg);
+    }
+    .mikoName{
+      font-size:12px;
+      color: var(--crimson);
+      letter-spacing:.12em;
+      margin-bottom:4px;
+      opacity:.95;
+    }
+    #mikoText{ font-size:14px; margin:0; }
+
+    /* ===== おみくじ：引き出し ===== */
+    .drawer{
+      margin: 10px auto 8px;
+      width: 92%;
+      max-width: 560px;
+      position: relative;
+      text-align:left;
+    }
+    .slot{
+      height: 22px;
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(179,18,27,.18), rgba(255,255,255,.65));
+      border: 1px solid rgba(179,18,27,.25);
+      box-shadow: inset 0 2px 0 rgba(255,255,255,.5);
+      position: relative;
+      overflow: hidden;
+    }
+    .slot::after{
+      content:"";
+      position:absolute;
+      left:10%;
+      right:10%;
+      top: 9px;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(43,31,18,.18);
+    }
+
+    .omikuji{
+      margin-top: -6px;
+      background: linear-gradient(180deg, var(--paper), rgba(255,255,255,.8));
+      border: 2px solid rgba(179,18,27,.18);
+      border-radius: 18px;
+      box-shadow: inset 0 2px 0 rgba(255,255,255,.7), 0 10px 18px rgba(0,0,0,.10);
+      padding: 14px 12px 16px;
+      position: relative;
+      transform: translateY(-46px);
+      opacity: 0;
+    }
+    .omikuji.pull{ animation: pullOut .55s cubic-bezier(.2,.9,.15,1.05) both; }
+    @keyframes pullOut{
+      0%   { transform: translateY(-56px); opacity: 0; }
+      65%  { transform: translateY(6px);  opacity: 1; }
+      100% { transform: translateY(0);    opacity: 1; }
+    }
+    /* リセット時は隠す */
+    .omikuji.hidden{
+      transform: translateY(-46px);
+      opacity: 0;
+    }
+
+    .stamp{
+      position:absolute; right:12px; top:12px;
+      width:54px; height:54px; border-radius:14px;
+      border:2px solid rgba(179,18,27,.35);
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.55), rgba(255,77,109,.22));
+      display:grid; place-items:center;
+      transform: rotate(10deg);
+    }
+    .stamp span{ color: var(--crimson); font-weight:800; letter-spacing:.18em; font-size:12px; }
+    .title{ font-size:12px; letter-spacing:.22em; color: var(--crimson); margin-bottom: 10px; }
+    #grade{ margin:0; font-size:34px; letter-spacing:.16em; padding-right:70px; }
+
+    .status{
+      margin-top: 10px;
+      background: rgba(255,255,255,.78);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 10px 10px;
+    }
+    .row{
+      display:grid;
+      grid-template-columns: 110px 1fr;
+      gap: 10px;
+      align-items:center;
+      margin: 8px 0;
+    }
+    .label{ font-size: 12px; opacity: .75; letter-spacing:.08em; }
+    .gaugeWrap{ display:flex; gap:10px; align-items:center; }
+    .gauge{
+      height: 12px; flex: 1;
+      border-radius: 999px;
+      background: rgba(43,31,18,.08);
+      overflow:hidden;
+      border: 1px solid rgba(43,31,18,.10);
+    }
+    .gauge > span{
+      display:block; height:100%; width:0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(255,77,109,.9), rgba(179,18,27,.9));
+      transition: width .55s ease;
+    }
+    .pct{ width:72px; text-align:right; font-variant-numeric: tabular-nums; font-size:12px; opacity:.9; }
+    .icons{ font-size:16px; letter-spacing:.12em; white-space: nowrap; }
+
+    .grid{ margin-top:12px; display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .box{
+      background: rgba(255,255,255,.78);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 10px 10px;
+    }
+    .k{ font-size:12px; opacity:.75; margin-bottom:6px; letter-spacing:.08em; }
+    .v{ font-size:14px; line-height:1.6; }
+
+    .advice{
+      margin-top:10px;
+      background: rgba(255,255,255,.78);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 10px 10px;
+    }
+    .note{ margin-top:12px; font-size:12px; opacity:.75; }
+  </style>
+</head>
+
+<body>
+  <div class="petals" aria-hidden="true">
+    <div class="petal p1"></div><div class="petal p2"></div><div class="petal p3"></div><div class="petal p4"></div>
+  </div>
+
+  <main class="card">
+    <div class="ribbon" aria-hidden="true"></div>
+
+    <div class="torii" aria-hidden="true">
+      <div class="bar"></div>
+      <div class="pillars"><div class="pillar"></div><div class="pillar"></div></div>
+    </div>
+
+    <h1>縁結びおみくじ</h1>
+    <p class="sub">恋愛運とご縁の流れを占います</p>
+
+    <!-- ★ ボタン2つ：引く / もう一度（リセット） -->
+    <div class="btnRow">
+      <button id="drawBtn" onclick="draw()">縁結びを祈って引く</button>
+      <button class="secondary" id="resetBtn" onclick="resetOmikuji()">もう一度（戻る）</button>
+    </div>
+
+    <!-- ★ 巫女さん -->
+    <div class="mikoWrap" aria-live="polite">
+      <div class="miko" id="miko">
+        <div class="mikoAvatar" aria-hidden="true" id="mikoAvatar">
+          <div class="hair"></div>
+          <div class="sideL"></div><div class="sideR"></div>
+          <div class="face"></div>
+
+          <!-- 表情パーツ -->
+          <div class="eyes">
+            <div class="eye left"></div>
+            <div class="eye right"></div>
+          </div>
+          <div class="mouth"></div>
+
+          <div class="top"></div>
+          <div class="skirt"></div>
+          <div class="paperMini"></div>
+        </div>
+        <div class="mikoBubble">
+          <div class="mikoName">巫女</div>
+          <p id="mikoText">「縁結びを願って…ボタンを押してくださいね。」</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- おみくじ -->
+    <div class="drawer" aria-live="polite">
+      <div class="slot" aria-hidden="true"></div>
+
+      <section class="omikuji hidden" id="omikuji">
+        <div class="stamp"><span>良縁</span></div>
+
+        <div class="title">今日のご縁</div>
+        <h2 id="grade">—</h2>
+
+        <div class="status">
+          <div class="row">
+            <div class="label">ご縁度</div>
+            <div class="gaugeWrap">
+              <div class="gauge"><span id="bondBar"></span></div>
+              <div class="pct" id="bondPct">—%</div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="label">距離の近さ</div>
+            <div class="icons" id="distanceHearts">—</div>
+          </div>
+
+          <div class="row">
+            <div class="label">告白運</div>
+            <div class="icons" id="confessStars">—</div>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="box"><div class="k">出会い運</div><div class="v" id="meet">—</div></div>
+          <div class="box"><div class="k">進展運</div><div class="v" id="progress">—</div></div>
+          <div class="box"><div class="k">相性のヒント</div><div class="v" id="compat">—</div></div>
+          <div class="box"><div class="k">ラッキー行動</div><div class="v" id="action">—</div></div>
+        </div>
+
+        <div class="advice">
+          <div class="k">ひとこと</div>
+          <div class="v" id="message">—</div>
+        </div>
+      </section>
+    </div>
+
+    <div class="note">※「もう一度（戻る）」で引く前の画面に戻れます</div>
+  </main>
+
+  <script>
+    const STATUS_RANGE = {
+      "大吉": { bond:[82, 98], hearts:[4,5], stars:[4,5] },
+      "中吉": { bond:[65, 85], hearts:[3,5], stars:[3,4] },
+      "小吉": { bond:[48, 72], hearts:[2,4], stars:[2,4] },
+      "末吉": { bond:[35, 60], hearts:[1,3], stars:[1,3] },
+      "凶":   { bond:[12, 45], hearts:[0,2], stars:[0,2] }
+    };
+
+    function randInt(min, max){
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    function makeIcons(filled, total, filledChar, emptyChar){
+      let s = "";
+      for(let i=0;i<total;i++){
+        s += (i < filled) ? filledChar : emptyChar;
+      }
+      return s;
+    }
+
+    // 表情3パターン：smile / neutral / surprise
+    const EXPRESSIONS = ["expr-smile", "expr-neutral", "expr-surprise"];
+    function setMikoExpression(){
+      const avatar = document.getElementById("mikoAvatar");
+      // いったん全部外す
+      EXPRESSIONS.forEach(c => avatar.classList.remove(c));
+      // ランダムで付ける
+      const cls = EXPRESSIONS[randInt(0, EXPRESSIONS.length - 1)];
+      avatar.classList.add(cls);
+      return cls;
+    }
+
+    // 例（授業用に短く）：必要なら以前の大量fortunesに差し替えOK
+    const fortunes = [
+      { grade:"大吉", meet:"良縁が近い。紹介や偶然の出会いが起こりやすい。", progress:"素直な一言が鍵。", compat:"自然体でいられる相手が吉。", action:"お礼のメッセージ／笑顔", message:"願いは通じやすい日。"},
+      { grade:"中吉", meet:"身近なコミュニティにヒント。", progress:"焦らず段階を踏むと良い。", compat:"趣味が合う相手が吉。", action:"共通の話題を増やす", message:"丁寧さが勝ちます。"},
+      { grade:"小吉", meet:"見落とし注意。第一印象だけで判断しないで。", progress:"安心感づくりが先。", compat:"聞き上手な相手が吉。", action:"挨拶／感謝を言葉に", message:"急がず整える日。"},
+      { grade:"末吉", meet:"種まきの時期。", progress:"深追いせず次につながる会話を。", compat:"穏やかな価値観の人が吉。", action:"身だしなみを整える", message:"整えるほど運が上がります。"},
+      { grade:"凶", meet:"無理に追わないでOK。", progress:"誤解が起きやすいので慎重に。", compat:"安心をくれる人が吉。", action:"温かい飲み物／休息", message:"休む勇気が縁を呼びます。"}
+    ];
+
+    const gradeColor = (grade) => {
+      if (grade === "大吉") return "#b3121b";
+      if (grade === "中吉") return "#8b1d3b";
+      if (grade === "小吉") return "#2b1f12";
+      if (grade === "末吉") return "#5a3b2a";
+      return "#2b1f12";
+    };
+
+    function showMiko(text){
+      const miko = document.getElementById("miko");
+      miko.classList.remove("show");
+      void miko.offsetWidth;
+      miko.classList.add("show");
+      document.getElementById("mikoText").textContent = text;
+    }
+
+    function pullAnimation(){
+      const paper = document.getElementById("omikuji");
+      paper.classList.remove("pull");
+      paper.classList.remove("hidden");
+      void paper.offsetWidth;
+      paper.classList.add("pull");
+    }
+
+    function draw(){
+      // 表情をランダムに変更
+      const expr = setMikoExpression();
+
+      // おみくじ内容をランダム抽選
+      const f = fortunes[randInt(0, fortunes.length - 1)];
+
+      // ステータスも運勢に合わせてランダム生成
+      const r = STATUS_RANGE[f.grade];
+      const bond = randInt(r.bond[0], r.bond[1]);
+      const hearts = randInt(r.hearts[0], r.hearts[1]);
+      const stars  = randInt(r.stars[0], r.stars[1]);
+
+      // 巫女さんセリフ（表情に合わせて少し変える）
+      const faceLine =
+        (expr === "expr-smile") ? "にこにこ" :
+        (expr === "expr-surprise") ? "びっくり" : "おだやか";
+
+      showMiko(`（${faceLine}顔の巫女）「こちら、恋みくじです。今日は『${f.grade}』ですよ。」`);
+
+      // 表示反映
+      const gradeEl = document.getElementById("grade");
+      gradeEl.textContent = f.grade;
+      gradeEl.style.color = gradeColor(f.grade);
+
+      document.getElementById("bondBar").style.width = bond + "%";
+      document.getElementById("bondPct").textContent = bond + "%";
+      document.getElementById("distanceHearts").textContent = makeIcons(hearts, 5, "❤", "♡");
+      document.getElementById("confessStars").textContent = makeIcons(stars, 5, "★", "☆");
+
+      document.getElementById("meet").textContent = f.meet;
+      document.getElementById("progress").textContent = f.progress;
+      document.getElementById("compat").textContent = f.compat;
+      document.getElementById("action").textContent = f.action;
+      document.getElementById("message").textContent = f.message;
+
+      pullAnimation();
+    }
+
+    // ★ 引く前の画面に戻す
+    function resetOmikuji(){
+      // 巫女さんを初期セリフに戻す（表情も初期＝neutral）
+      const avatar = document.getElementById("mikoAvatar");
+      EXPRESSIONS.forEach(c => avatar.classList.remove(c));
+      avatar.classList.add("expr-neutral");
+      showMiko("「縁結びを願って…ボタンを押してくださいね。」");
+
+      // おみくじを隠す＆中身を初期化
+      const paper = document.getElementById("omikuji");
+      paper.classList.remove("pull");
+      paper.classList.add("hidden");
+
+      document.getElementById("grade").textContent = "—";
+      document.getElementById("bondBar").style.width = "0%";
+      document.getElementById("bondPct").textContent = "—%";
+      document.getElementById("distanceHearts").textContent = "—";
+      document.getElementById("confessStars").textContent = "—";
+      document.getElementById("meet").textContent = "—";
+      document.getElementById("progress").textContent = "—";
+      document.getElementById("compat").textContent = "—";
+      document.getElementById("action").textContent = "—";
+      document.getElementById("message").textContent = "—";
+    }
+
+    // 初期表情をセット
+    document.getElementById("mikoAvatar").classList.add("expr-neutral");
+  </script>
+</body>
+</html>
