@@ -562,23 +562,6 @@
       { grade:"凶", meet:"無理に追わないでOK。", progress:"誤解が起きやすいので慎重に。", compat:"安心をくれる人が吉。", action:"温かい飲み物／休息", message:"休む勇気が縁を呼びます。"}
     ];
 
-    const GRADE_WEIGHTS = {
-      "大吉": 2,
-      "吉": 5,
-      "中吉": 5,
-      "小吉": 3,
-      "末吉": 3,
-      "凶": 1
-    };
-
-    function pickFortune(){
-      const weightedPool = fortunes.flatMap((fortune) => {
-        const weight = GRADE_WEIGHTS[fortune.grade] || 1;
-        return Array(weight).fill(fortune);
-      });
-      return weightedPool[randInt(0, weightedPool.length - 1)];
-    }
-
     const gradeColor = (grade) => {
       if (grade === "大吉") return "#b3121b";
       if (grade === "吉") return "#a63a4b";
@@ -609,7 +592,7 @@
       const expr = setMikoExpression();
 
       // おみくじ内容をランダム抽選
-      const f = pickFortune();
+      const f = fortunes[randInt(0, fortunes.length - 1)];
 
       // ステータスも運勢に合わせてランダム生成
       const r = STATUS_RANGE[f.grade];
