@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>縁結びおみくじ | 卒業前版</title>
+  <style>
+    :root{
+      --bg-top:#f6efe4;
+      --bg-bottom:#e8dcc8;
+      --navy:#17324d;
+      --deep:#0e2236;
+      --gold:#b48a3a;
+      --gold-soft:#d8bf8d;
+      --paper:#fffdf8;
+      --paper-line:rgba(23,50,77,.12);
+      --accent:#c44b5d;
+      --accent-soft:#f2d9dd;
+      --shadow:rgba(14,34,54,.16);
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      color:var(--deep);
+      font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,.85), transparent 28%),
+        radial-gradient(circle at 85% 18%, rgba(180,138,58,.15), transparent 24%),
+        linear-gradient(180deg, var(--bg-top), var(--bg-bottom));
+    }
+
+    a{ color:inherit; }
+
+    .page{
+      width:min(1100px, calc(100% - 32px));
+      margin:0 auto;
+      padding:24px 0 40px;
+    }
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:18px;
+    }
+
+    .topbar h1{
+      margin:0;
+      font-size:14px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--navy);
+    }
+
+    .topbar nav{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .topbar a{
+      text-decoration:none;
+      border:1px solid rgba(23,50,77,.14);
+      background:rgba(255,255,255,.72);
+      padding:10px 14px;
+      border-radius:999px;
+      box-shadow:0 8px 18px rgba(14,34,54,.08);
+      font-size:14px;
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(280px, .8fr);
+      gap:20px;
+      align-items:stretch;
+    }
+
+    .panel{
+      background:rgba(255,253,248,.88);
+      border:1px solid var(--paper-line);
+      border-radius:28px;
+      box-shadow:0 20px 40px var(--shadow);
+      overflow:hidden;
+    }
+
+    .heroMain{
+      padding:28px;
+      position:relative;
+      isolation:isolate;
+    }
+
+    .heroMain::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle at top right, rgba(180,138,58,.18), transparent 32%),
+        linear-gradient(135deg, rgba(23,50,77,.03), transparent 54%);
+      z-index:-1;
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:7px 12px;
+      border-radius:999px;
+      background:rgba(23,50,77,.08);
+      color:var(--navy);
+      font-size:13px;
+      letter-spacing:.08em;
+    }
+
+    .eyebrow strong{
+      font-size:12px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+    }
+
+    .lead{
+      margin:18px 0 10px;
+      font-size:clamp(30px, 5vw, 48px);
+      line-height:1.15;
+      color:var(--navy);
+    }
+
+    .summary{
+      margin:0;
+      max-width:38em;
+      line-height:1.8;
+      font-size:15px;
+    }
+
+    .featureList{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0, 1fr));
+      gap:12px;
+      margin:24px 0 0;
+    }
+
+    .featureCard{
+      padding:16px;
+      border-radius:18px;
+      background:rgba(255,255,255,.72);
+      border:1px solid rgba(23,50,77,.08);
+    }
+
+    .featureCard strong{
+      display:block;
+      margin-bottom:6px;
+      color:var(--navy);
+      font-size:14px;
+    }
+
+    .featureCard p{
+      margin:0;
+      font-size:13px;
+      line-height:1.7;
+    }
+
+    .heroSide{
+      padding:24px;
+      display:grid;
+      gap:14px;
+      align-content:start;
+      background:
+        linear-gradient(180deg, rgba(23,50,77,.98), rgba(14,34,54,.95));
+      color:#f9f3e7;
+    }
+
+    .heroSide h2{
+      margin:0;
+      font-size:20px;
+      letter-spacing:.08em;
+    }
+
+    .heroSide p{
+      margin:0;
+      font-size:14px;
+      line-height:1.8;
+      color:rgba(249,243,231,.88);
+    }
+
+    .badgeRow{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(255,255,255,.06);
+      font-size:13px;
+    }
+
+    .workspace{
+      margin-top:20px;
+      display:grid;
+      grid-template-columns:minmax(0, 1.3fr) minmax(280px, .7fr);
+      gap:20px;
+      align-items:start;
+    }
+
+    .fortunePanel{
+      padding:24px;
+    }
+
+    .sectionTitle{
+      margin:0 0 14px;
+      color:var(--navy);
+      font-size:24px;
+      letter-spacing:.08em;
+    }
+
+    .buttonRow{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-bottom:18px;
+    }
+
+    button{
+      appearance:none;
+      border:none;
+      cursor:pointer;
+      border-radius:999px;
+      padding:13px 18px;
+      font:inherit;
+      font-size:15px;
+      transition:transform .12s ease, filter .16s ease;
+    }
+
+    button:hover{ filter:brightness(1.04); }
+    button:active{ transform:translateY(2px); }
+
+    .primary{
+      background:linear-gradient(180deg, var(--accent), #a73448);
+      color:#fff;
+      box-shadow:0 14px 22px rgba(196,75,93,.24);
+    }
+
+    .secondary{
+      background:rgba(23,50,77,.08);
+      color:var(--navy);
+      border:1px solid rgba(23,50,77,.1);
+    }
+
+    .resultShell{
+      border:1px solid rgba(23,50,77,.1);
+      border-radius:24px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.94), rgba(248,243,234,.94));
+      padding:22px;
+    }
+
+    .resultHead{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:18px;
+    }
+
+    .resultHead p{
+      margin:0;
+      color:rgba(14,34,54,.76);
+      font-size:14px;
+    }
+
+    .gradeMark{
+      min-width:132px;
+      padding:18px 16px;
+      border-radius:20px;
+      text-align:center;
+      background:linear-gradient(180deg, rgba(180,138,58,.18), rgba(180,138,58,.07));
+      border:1px solid rgba(180,138,58,.24);
+    }
+
+    .gradeMark span{
+      display:block;
+      font-size:12px;
+      letter-spacing:.2em;
+      color:rgba(23,50,77,.72);
+    }
+
+    .gradeMark strong{
+      display:block;
+      margin-top:6px;
+      font-size:34px;
+      color:var(--navy);
+    }
+
+    .meterGrid{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0, 1fr));
+      gap:12px;
+      margin-bottom:18px;
+    }
+
+    .meterCard{
+      padding:14px;
+      border-radius:18px;
+      background:rgba(23,50,77,.045);
+      border:1px solid rgba(23,50,77,.08);
+    }
+
+    .meterCard .label{
+      display:block;
+      font-size:12px;
+      letter-spacing:.08em;
+      color:rgba(23,50,77,.7);
+      margin-bottom:8px;
+    }
+
+    .meterCard .value{
+      font-size:24px;
+      color:var(--navy);
+    }
+
+    .barTrack{
+      margin-top:10px;
+      height:10px;
+      background:rgba(23,50,77,.08);
+      border-radius:999px;
+      overflow:hidden;
+    }
+
+    .barTrack span{
+      display:block;
+      height:100%;
+      width:0;
+      border-radius:999px;
+      background:linear-gradient(90deg, var(--gold), var(--accent));
+      transition:width .45s ease;
+    }
+
+    .detailGrid{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0, 1fr));
+      gap:12px;
+    }
+
+    .detailCard{
+      padding:16px;
+      border-radius:18px;
+      background:#fff;
+      border:1px solid rgba(23,50,77,.08);
+      min-height:118px;
+    }
+
+    .detailCard .k{
+      display:block;
+      margin-bottom:8px;
+      font-size:12px;
+      letter-spacing:.08em;
+      color:rgba(23,50,77,.66);
+    }
+
+    .detailCard .v{
+      margin:0;
+      line-height:1.8;
+      font-size:14px;
+    }
+
+    .historyPanel{
+      padding:24px;
+      display:grid;
+      gap:16px;
+      align-content:start;
+    }
+
+    .historyPanel h2{
+      margin:0;
+      color:var(--navy);
+      font-size:22px;
+    }
+
+    .historyPanel p{
+      margin:0;
+      font-size:14px;
+      line-height:1.8;
+      color:rgba(14,34,54,.76);
+    }
+
+    .historyList{
+      list-style:none;
+      margin:0;
+      padding:0;
+      display:grid;
+      gap:12px;
+    }
+
+    .historyList li{
+      padding:14px;
+      border-radius:18px;
+      background:rgba(23,50,77,.045);
+      border:1px solid rgba(23,50,77,.08);
+    }
+
+    .historyList strong{
+      color:var(--navy);
+      display:block;
+      margin-bottom:6px;
+      font-size:16px;
+    }
+
+    .historyList span{
+      display:block;
+      font-size:13px;
+      line-height:1.7;
+      color:rgba(14,34,54,.76);
+    }
+
+    .historyEmpty{
+      padding:18px;
+      border-radius:18px;
+      background:rgba(23,50,77,.05);
+      border:1px dashed rgba(23,50,77,.16);
+      font-size:14px;
+      line-height:1.8;
+    }
+
+    .footerNote{
+      margin-top:18px;
+      font-size:12px;
+      color:rgba(14,34,54,.68);
+      line-height:1.7;
+    }
+
+    @media (max-width: 900px){
+      .hero,
+      .workspace{
+        grid-template-columns:1fr;
+      }
+
+      .featureList,
+      .meterGrid,
+      .detailGrid{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      *{
+        animation:none !important;
+        transition:none !important;
+        scroll-behavior:auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="topbar">
+      <h1>Omikuji Compare</h1>
+      <nav aria-label="比較ページ">
+        <a href="./index.html">初期版へ戻る</a>
+      </nav>
+    </div>
+
+    <section class="hero">
+      <div class="panel heroMain">
+        <div class="eyebrow"><strong>Graduate</strong><span>卒業前版の見せ方</span></div>
+        <h2 class="lead">見た目だけでなく、結果の受け取り方も整えたおみくじ。</h2>
+        <p class="summary">初期版のやさしい雰囲気は残しつつ、情報の整理、読みやすさ、ふり返りやすさを加えた比較用ページです。1回ごとの結果だけで終わらず、直近の運勢を見返せるようにしてあります。</p>
+        <div class="featureList">
+          <div class="featureCard">
+            <strong>情報整理</strong>
+            <p>運勢をひとつの紙面にまとめず、見出しごとに読み分けやすくしました。</p>
+          </div>
+          <div class="featureCard">
+            <strong>見返しやすさ</strong>
+            <p>直近の結果を履歴として残し、成長後の実装らしさを加えています。</p>
+          </div>
+          <div class="featureCard">
+            <strong>安全な構成</strong>
+            <p>外部依存なしの単一 HTML なので、比較作業で壊れる範囲を限定できます。</p>
+          </div>
+        </div>
+      </div>
+
+      <aside class="panel heroSide">
+        <h2>比較ポイント</h2>
+        <p>初期版はかわいらしさと直感的な操作、卒業前版は読みやすさと情報設計を意識した構成です。どちらも単体で開けるので、片方が崩れてももう片方の確認が続けられます。</p>
+        <div class="badgeRow">
+          <span class="badge">単一 HTML</span>
+          <span class="badge">UTF-8 維持</span>
+          <span class="badge">履歴保存</span>
+        </div>
+      </aside>
+    </section>
+
+    <section class="workspace">
+      <div class="panel fortunePanel">
+        <h2 class="sectionTitle">今日のご縁を引く</h2>
+        <div class="buttonRow">
+          <button class="primary" type="button" id="drawBtn">おみくじを引く</button>
+          <button class="secondary" type="button" id="resetBtn">表示を初期化</button>
+          <button class="secondary" type="button" id="clearHistoryBtn">履歴を消す</button>
+        </div>
+
+        <div class="resultShell" aria-live="polite">
+          <div class="resultHead">
+            <div>
+              <p>卒業前版では、結果の強弱だけでなく、次の一歩を言葉で受け取りやすい構成にしています。</p>
+            </div>
+            <div class="gradeMark">
+              <span>RESULT</span>
+              <strong id="grade">準備中</strong>
+            </div>
+          </div>
+
+          <div class="meterGrid">
+            <div class="meterCard">
+              <span class="label">ご縁度</span>
+              <div class="value" id="bondValue">--%</div>
+              <div class="barTrack"><span id="bondBar"></span></div>
+            </div>
+            <div class="meterCard">
+              <span class="label">心の距離</span>
+              <div class="value" id="distanceValue">--</div>
+            </div>
+            <div class="meterCard">
+              <span class="label">行動タイミング</span>
+              <div class="value" id="timingValue">--</div>
+            </div>
+          </div>
+
+          <div class="detailGrid">
+            <div class="detailCard">
+              <span class="k">出会いの気配</span>
+              <p class="v" id="meet">ボタンを押すと結果が表示されます。</p>
+            </div>
+            <div class="detailCard">
+              <span class="k">進展のヒント</span>
+              <p class="v" id="progress">焦らず、比較できる形を整えたあとで広げていく想定です。</p>
+            </div>
+            <div class="detailCard">
+              <span class="k">相性のキーワード</span>
+              <p class="v" id="compat">落ち着き / 誠実 / 自然体</p>
+            </div>
+            <div class="detailCard">
+              <span class="k">次の一歩</span>
+              <p class="v" id="action">まずは初期版と卒業前版を見比べてみましょう。</p>
+            </div>
+            <div class="detailCard">
+              <span class="k">今日のひとこと</span>
+              <p class="v" id="message">見た目が整うと、受け取る印象も変わります。</p>
+            </div>
+            <div class="detailCard">
+              <span class="k">デザインメモ</span>
+              <p class="v" id="designNote">柔らかさを残しつつ、情報の階層を見せる構成にしています。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="panel historyPanel">
+        <h2>最近の結果</h2>
+        <p>直近 5 件をこのブラウザに保存します。初期版にはない「見返せる体験」を比較ポイントとして加えています。</p>
+        <ul class="historyList" id="historyList"></ul>
+        <div class="historyEmpty" id="historyEmpty">まだ履歴はありません。おみくじを引くとここに残ります。</div>
+      </aside>
+    </section>
+
+    <p class="footerNote">比較しやすさのため、`index.html` は初期版として維持し、`graduate.html` を独立した編集対象にしています。どちらか一方に不具合が出ても切り分けやすい構成です。</p>
+  </div>
+
+  <script>
+    const HISTORY_KEY = "omikuji-graduate-history";
+    const fortunes = [
+      {
+        grade: "大吉",
+        meet: "人づての紹介や、何気ない再会からご縁が深まりやすい日です。",
+        progress: "言葉を飾りすぎず、素直な一言を添えると気持ちが届きます。",
+        compat: "安心感をくれる人 / 約束を大切にする人",
+        action: "感謝を短くても言葉にして返す",
+        message: "気負わず動くほど、良い流れに乗れます。",
+        designNote: "勢いだけでなく、余白と整理が魅力を引き立てます。",
+        timing: "今が動きどき",
+        bond: [84, 98],
+        distance: ["かなり近い", "手が届きそう", "追い風あり"]
+      },
+      {
+        grade: "中吉",
+        meet: "身近な場所にヒントがあります。会話のきっかけは普段の中にあります。",
+        progress: "丁寧に相手の話を受け止めるほど、信頼が育ちます。",
+        compat: "趣味が合う人 / 会話のテンポが近い人",
+        action: "共通点をひとつ見つけて話題にする",
+        message: "大きく動くより、関係を温める一日です。",
+        designNote: "情報量を増やしても、見出しを整えると読みやすさは保てます。",
+        timing: "様子を見ながら前進",
+        bond: [68, 86],
+        distance: ["じわじわ近い", "安心感が育つ", "会話で縮まる"]
+      },
+      {
+        grade: "小吉",
+        meet: "第一印象だけでは見えない良さに気づけそうです。",
+        progress: "結果を急がず、やり取りの回数を増やすと安定します。",
+        compat: "落ち着いて話せる人 / 聞き上手な人",
+        action: "笑顔とあいさつをいつもより丁寧にする",
+        message: "派手さより、積み重ねが効く日です。",
+        designNote: "控えめな演出でも、構成が整うと完成度は上がります。",
+        timing: "土台づくりに向く",
+        bond: [52, 74],
+        distance: ["まだこれから", "ゆっくり縮まる", "焦らずで良い"]
+      },
+      {
+        grade: "末吉",
+        meet: "今は種まきの時期です。あとから効いてくる行動が吉になります。",
+        progress: "深追いせず、次につながる空気を残すのが大切です。",
+        compat: "穏やかな価値観の人 / 自分のペースを尊重してくれる人",
+        action: "身だしなみや言葉選びを整える",
+        message: "準備を整えた分だけ、あとで差が出ます。",
+        designNote: "比較用ページは、派手さより保守しやすさも大切です。",
+        timing: "今日は整える日",
+        bond: [36, 58],
+        distance: ["少しずつ", "きっかけ待ち", "静かな流れ"]
+      },
+      {
+        grade: "凶",
+        meet: "無理に追うと疲れやすい日です。自分を整える方向が向いています。",
+        progress: "言い回しのズレが起きやすいので、急な決断は避けるのが安心です。",
+        compat: "落ち着かせてくれる人 / 安心をくれる人",
+        action: "ひと呼吸おいて、自分の気持ちを先に整える",
+        message: "休むことも前進です。今日は守りが吉。",
+        designNote: "不調時に戻しやすい構成こそ、安全な実装です。",
+        timing: "今日は慎重に",
+        bond: [12, 42],
+        distance: ["距離を測る日", "無理は禁物", "ひと休み推奨"]
+      }
+    ];
+
+    function randInt(min, max){
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function pickFortune(){
+      return fortunes[randInt(0, fortunes.length - 1)];
+    }
+
+    function loadHistory(){
+      try{
+        const raw = localStorage.getItem(HISTORY_KEY);
+        if(!raw) return [];
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+      }catch(error){
+        return [];
+      }
+    }
+
+    function saveHistory(items){
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(items.slice(0, 5)));
+    }
+
+    function renderHistory(){
+      const list = document.getElementById("historyList");
+      const empty = document.getElementById("historyEmpty");
+      const items = loadHistory();
+
+      list.innerHTML = "";
+
+      if(items.length === 0){
+        empty.hidden = false;
+        return;
+      }
+
+      empty.hidden = true;
+      items.forEach((item) => {
+        const li = document.createElement("li");
+        const title = document.createElement("strong");
+        const meta = document.createElement("span");
+        const note = document.createElement("span");
+
+        title.textContent = item.grade + " / " + item.timing;
+        meta.textContent = "ご縁度 " + item.bond + "% ・ " + item.distance;
+        note.textContent = item.message;
+
+        li.appendChild(title);
+        li.appendChild(meta);
+        li.appendChild(note);
+        list.appendChild(li);
+      });
+    }
+
+    function applyFortune(result){
+      const bond = randInt(result.bond[0], result.bond[1]);
+      const distance = result.distance[randInt(0, result.distance.length - 1)];
+
+      document.getElementById("grade").textContent = result.grade;
+      document.getElementById("bondValue").textContent = bond + "%";
+      document.getElementById("distanceValue").textContent = distance;
+      document.getElementById("timingValue").textContent = result.timing;
+      document.getElementById("meet").textContent = result.meet;
+      document.getElementById("progress").textContent = result.progress;
+      document.getElementById("compat").textContent = result.compat;
+      document.getElementById("action").textContent = result.action;
+      document.getElementById("message").textContent = result.message;
+      document.getElementById("designNote").textContent = result.designNote;
+      document.getElementById("bondBar").style.width = bond + "%";
+
+      const history = loadHistory();
+      history.unshift({
+        grade: result.grade,
+        bond,
+        distance,
+        timing: result.timing,
+        message: result.message
+      });
+      saveHistory(history);
+      renderHistory();
+    }
+
+    function resetView(){
+      document.getElementById("grade").textContent = "準備中";
+      document.getElementById("bondValue").textContent = "--%";
+      document.getElementById("distanceValue").textContent = "--";
+      document.getElementById("timingValue").textContent = "--";
+      document.getElementById("meet").textContent = "ボタンを押すと結果が表示されます。";
+      document.getElementById("progress").textContent = "焦らず、比較できる形を整えたあとで広げていく想定です。";
+      document.getElementById("compat").textContent = "落ち着き / 誠実 / 自然体";
+      document.getElementById("action").textContent = "まずは初期版と卒業前版を見比べてみましょう。";
+      document.getElementById("message").textContent = "見た目が整うと、受け取る印象も変わります。";
+      document.getElementById("designNote").textContent = "柔らかさを残しつつ、情報の階層を見せる構成にしています。";
+      document.getElementById("bondBar").style.width = "0%";
+    }
+
+    function clearHistory(){
+      localStorage.removeItem(HISTORY_KEY);
+      renderHistory();
+    }
+
+    document.getElementById("drawBtn").addEventListener("click", function(){
+      applyFortune(pickFortune());
+    });
+
+    document.getElementById("resetBtn").addEventListener("click", resetView);
+    document.getElementById("clearHistoryBtn").addEventListener("click", clearHistory);
+
+    resetView();
+    renderHistory();
+  </script>
+</body>
+</html>

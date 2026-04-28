@@ -100,6 +100,11 @@
       display:flex;
       justify-content:center;
     }
+    .btnSubWrap{
+      width:100%;
+      display:flex;
+      justify-content:center;
+    }
     button{
       border:none; cursor:pointer; font-family:inherit;
       font-size:16px; padding:12px 18px; border-radius:999px;
@@ -441,6 +446,9 @@
       <div class="btnPrimaryWrap">
         <button id="drawBtn" onclick="draw()">縁結びを祈って引く</button>
       </div>
+      <div class="btnSubWrap">
+        <button class="secondary smallBtn" id="resetBtn" onclick="resetOmikuji()">もう一度おみくじを引く</button>
+      </div>
     </div>
 
     <!-- ★ 巫女さん -->
@@ -513,9 +521,9 @@
       </section>
     </div>
 
-    <div class="note">※ 下のボタンから、もう一度おみくじを引く画面を開けます</div>
+    <div class="note">※「もう一度おみくじを引く」で引く前の画面に戻れます</div>
     <div class="compareNav" aria-label="比較ページへのリンク">
-      <a href="./graduate.html">もう一度おみくじを引く</a>
+      <a href="./graduate.html">卒業前版を見る</a>
     </div>
   </main>
 
