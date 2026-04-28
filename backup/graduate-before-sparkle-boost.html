@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>縁結びおみくじ</title>
-  <link rel="icon" type="image/png" href="./omikijitab.png" />
   <style>
     :root{
       --ink:#2b1f12;
@@ -294,24 +293,22 @@
     }
     .sparkles{
       position:absolute;
-      inset:-22px;
+      inset:-14px;
       pointer-events:none;
       opacity:0;
-      filter: drop-shadow(0 0 10px rgba(255,217,102,.65));
     }
     .sparkle{
       position:absolute;
-      width:14px; height:14px;
-      background: radial-gradient(circle, rgba(255,255,255,1), rgba(255,235,140,.98) 35%, rgba(255,214,97,.92) 58%, rgba(255,214,97,0) 76%);
+      width:10px; height:10px;
+      background: radial-gradient(circle, rgba(255,255,255,.95), rgba(255,214,97,.9) 55%, rgba(255,214,97,0) 70%);
       clip-path: polygon(50% 0%, 62% 36%, 100% 50%, 62% 64%, 50% 100%, 38% 64%, 0% 50%, 38% 36%);
       opacity:0;
-      mix-blend-mode: screen;
     }
-    .sparkle.s1{ left:-10px; top:0; }
-    .sparkle.s2{ right:-8px; top:4px; width:16px; height:16px; }
-    .sparkle.s3{ left:0; bottom:0; width:12px; height:12px; }
-    .sparkle.s4{ right:-4px; bottom:2px; }
-    .sparkle.s5{ left:24px; top:-14px; width:18px; height:18px; }
+    .sparkle.s1{ left:-4px; top:6px; }
+    .sparkle.s2{ right:-2px; top:10px; }
+    .sparkle.s3{ left:4px; bottom:4px; }
+    .sparkle.s4{ right:0; bottom:8px; }
+    .sparkle.s5{ left:28px; top:-6px; width:12px; height:12px; }
 
     .pose-smile .armL{ transform: rotate(8deg); }
     .pose-smile .armR{ transform: rotate(-8deg); }
@@ -325,12 +322,11 @@
     .pose-dance-rare .armR{ animation: danceArmRight .5s ease-in-out infinite alternate; }
     .pose-dance-rare .paperMini{ animation: paperWave .55s ease-in-out infinite alternate; }
     .pose-dance-rare .sparkles{ opacity:1; }
-    .pose-dance-rare .sparkle{ animation: sparkleFloat .95s ease-in-out infinite; }
-    .pose-dance-rare .sparkle.s1{ animation-delay:.05s; }
+    .pose-dance-rare .sparkle{ animation: sparkleFloat 1.2s ease-in-out infinite; }
     .pose-dance-rare .sparkle.s2{ animation-delay:.18s; }
-    .pose-dance-rare .sparkle.s3{ animation-delay:.28s; }
-    .pose-dance-rare .sparkle.s4{ animation-delay:.42s; }
-    .pose-dance-rare .sparkle.s5{ animation-delay:.56s; }
+    .pose-dance-rare .sparkle.s3{ animation-delay:.34s; }
+    .pose-dance-rare .sparkle.s4{ animation-delay:.52s; }
+    .pose-dance-rare .sparkle.s5{ animation-delay:.68s; }
 
     @keyframes cheerArmLeft{
       from{ transform: rotate(8deg) translateY(0); }
@@ -364,10 +360,9 @@
       to{ transform: rotate(8deg) translateY(-2px); }
     }
     @keyframes sparkleFloat{
-      0%{ opacity:0; transform: translateY(10px) scale(.45) rotate(0deg); }
-      25%{ opacity:1; transform: translateY(0) scale(1.15) rotate(18deg); }
-      60%{ opacity:1; transform: translateY(-12px) scale(1) rotate(38deg); }
-      100%{ opacity:0; transform: translateY(-26px) scale(.7) rotate(64deg); }
+      0%{ opacity:0; transform: translateY(6px) scale(.5) rotate(0deg); }
+      35%{ opacity:1; transform: translateY(-2px) scale(1) rotate(20deg); }
+      100%{ opacity:0; transform: translateY(-14px) scale(.7) rotate(48deg); }
     }
 
     .mikoBubble{
