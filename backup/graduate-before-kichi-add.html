@@ -522,7 +522,6 @@
   <script>
     const STATUS_RANGE = {
       "大吉": { bond:[82, 98], hearts:[4,5], stars:[4,5] },
-      "吉":   { bond:[74, 90], hearts:[3,5], stars:[3,5] },
       "中吉": { bond:[65, 85], hearts:[3,5], stars:[3,4] },
       "小吉": { bond:[48, 72], hearts:[2,4], stars:[2,4] },
       "末吉": { bond:[35, 60], hearts:[1,3], stars:[1,3] },
@@ -555,7 +554,6 @@
     // 例（授業用に短く）：必要なら以前の大量fortunesに差し替えOK
     const fortunes = [
       { grade:"大吉", meet:"良縁が近い。紹介や偶然の出会いが起こりやすい。", progress:"素直な一言が鍵。", compat:"自然体でいられる相手が吉。", action:"お礼のメッセージ／笑顔", message:"願いは通じやすい日。"},
-      { grade:"吉", meet:"落ち着いたご縁が育ちやすい日。身近な会話から流れが変わります。", progress:"急がず素直に向き合うほど、自然に距離が縮まります。", compat:"安心して話せる相手が吉。", action:"さりげない気づかいを言葉にする", message:"背伸びしない優しさが運を引き寄せます。"},
       { grade:"中吉", meet:"身近なコミュニティにヒント。", progress:"焦らず段階を踏むと良い。", compat:"趣味が合う相手が吉。", action:"共通の話題を増やす", message:"丁寧さが勝ちます。"},
       { grade:"小吉", meet:"見落とし注意。第一印象だけで判断しないで。", progress:"安心感づくりが先。", compat:"聞き上手な相手が吉。", action:"挨拶／感謝を言葉に", message:"急がず整える日。"},
       { grade:"末吉", meet:"種まきの時期。", progress:"深追いせず次につながる会話を。", compat:"穏やかな価値観の人が吉。", action:"身だしなみを整える", message:"整えるほど運が上がります。"},
@@ -564,7 +562,6 @@
 
     const gradeColor = (grade) => {
       if (grade === "大吉") return "#b3121b";
-      if (grade === "吉") return "#a63a4b";
       if (grade === "中吉") return "#8b1d3b";
       if (grade === "小吉") return "#2b1f12";
       if (grade === "末吉") return "#5a3b2a";
