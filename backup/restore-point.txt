@@ -1,0 +1,29 @@
+復旧ポイント
+作成日: 2026-04-28
+基準コミット: f33a4db
+基準ファイル: index.html
+
+この時点の安全方針
+- index.html は初期版として残す
+- graduate.html は卒業前版として追加する
+- index.html の変更は比較リンクの追加だけに抑える
+
+すぐ戻したいときの目安
+1. graduate.html だけをなかったことにしたい場合
+   graduate.html を削除する
+
+2. index.html を基準コミットの状態へ戻したい場合
+   Git が使える環境なら、基準コミット f33a4db の index.html を復元する
+
+3. 変更点を確認したい場合
+   git diff
+
+4. どこが崩れたか切り分けたい場合
+   index.html と graduate.html を別々に開き、graduate.html 側だけが崩れているか確認する
+
+今回の追加物
+- graduate.html
+- backup/restore-point.txt
+
+今回の index.html 変更内容
+- 卒業前版へ移動するリンクを追加

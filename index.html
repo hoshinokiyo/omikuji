@@ -388,6 +388,24 @@
       border-radius: 14px;
       padding: 10px 10px;
     }
+    .compareNav{
+      margin-top: 14px;
+      display:flex;
+      justify-content:center;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .compareNav a{
+      color: var(--crimson);
+      text-decoration:none;
+      font-size:14px;
+      padding:10px 14px;
+      border-radius:999px;
+      background: rgba(255,255,255,.82);
+      border:1px solid rgba(179,18,27,.18);
+      box-shadow: 0 10px 18px rgba(0,0,0,.08);
+    }
+    .compareNav a:hover{ filter: brightness(1.04); }
     .note{ margin-top:12px; font-size:12px; opacity:.75; }
   </style>
 </head>
@@ -485,6 +503,9 @@
     </div>
 
     <div class="note">※「もう一度（戻る）」で引く前の画面に戻れます</div>
+    <div class="compareNav" aria-label="比較ページへのリンク">
+      <a href="./graduate.html">卒業前版を見る</a>
+    </div>
   </main>
 
   <script>
