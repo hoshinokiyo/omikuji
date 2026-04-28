@@ -670,23 +670,23 @@
 
       if(grade === "大吉" && isRareDaikichi){
         avatar.classList.add("expr-big-smile", "pose-dance-rare");
-        return "「大吉です。祝福の舞をお届けしますね。」";
+        return "（きらきら舞う巫女）「大吉です。祝福の舞をお届けしますね。」";
       }
       if(grade === "大吉"){
         avatar.classList.add("expr-big-smile", "pose-smile");
-        return "「今日は大吉。とても良い流れですよ。」";
+        return "（満面の笑みの巫女）「今日は大吉。とても良い流れですよ。」";
       }
       if(grade === "吉" || grade === "中吉" || grade === "小吉"){
         avatar.classList.add("expr-smile", "pose-smile");
-        return `「今日は${grade}です。やさしく進めていきましょう。」`;
+        return `（ほほえむ巫女）「今日は『${grade}』です。やさしく進めていきましょう。」`;
       }
       if(grade === "末吉"){
         avatar.classList.add("expr-smile", "pose-cheer");
-        return "「末吉です。少しずつ整えていけば大丈夫ですよ。」";
+        return "（小さくがんばれポーズの巫女）「末吉です。少しずつ整えていけば大丈夫ですよ。」";
       }
 
       avatar.classList.add("expr-smile", "pose-dance");
-      return "「凶でも大丈夫。ここから整えていきましょうね。」";
+      return "（応援の舞を見せる巫女）「凶でも大丈夫。ここから整えていきましょうね。」";
     }
 
     // 例（授業用に短く）：必要なら以前の大量fortunesに差し替えOK
@@ -751,7 +751,7 @@
       const bond = randInt(r.bond[0], r.bond[1]);
       const hearts = randInt(r.hearts[0], r.hearts[1]);
       const stars  = randInt(r.stars[0], r.stars[1]);
-      showMiko(performanceMessage);
+      showMiko(`${performanceMessage} 「こちら、恋みくじです。今日は『${f.grade}』ですよ。」`);
 
       // 表示反映
       const gradeEl = document.getElementById("grade");
