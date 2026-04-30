@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>縁結びおみくじ</title>
-  <link rel="icon" type="image/png" href="./omikijitab.png" />
   <style>
     :root{
       --ink:#2b1f12;
@@ -91,15 +90,10 @@
     /* ボタン */
     .btnRow{
       display:flex;
-      flex-direction:column;
-      align-items:center;
+      justify-content:center;
+      flex-wrap:wrap;
       gap:10px;
       margin-bottom: 10px;
-    }
-    .btnPrimaryWrap{
-      width:100%;
-      display:flex;
-      justify-content:center;
     }
     button{
       border:none; cursor:pointer; font-family:inherit;
@@ -118,11 +112,6 @@
       background: linear-gradient(180deg, rgba(43,31,18,.55), rgba(43,31,18,.85));
     }
     .secondary::before{ content:"↺"; }
-    .smallBtn{
-      font-size:13px;
-      padding:8px 14px;
-      box-shadow: 0 8px 14px rgba(0,0,0,.14);
-    }
 
     /* ===== 巫女さん ===== */
     .mikoWrap{
@@ -153,7 +142,6 @@
       height:78px;
       position:relative;
       filter: drop-shadow(0 10px 14px rgba(0,0,0,.12));
-      transform-origin: 50% 80%;
     }
     .hair{
       position:absolute;
@@ -179,18 +167,6 @@
     }
     .sideL{ left:12px; }
     .sideR{ right:12px; }
-    .armL,.armR{
-      position:absolute;
-      top:43px;
-      width:10px; height:24px;
-      background: linear-gradient(180deg, #ffffff, #f3f0ea);
-      border: 1px solid rgba(43,31,18,.10);
-      border-radius: 10px;
-      transform-origin: top center;
-      box-shadow: 0 4px 8px rgba(0,0,0,.08);
-    }
-    .armL{ left:8px; transform: rotate(16deg); }
-    .armR{ right:8px; transform: rotate(-16deg); }
 
     /* 目・口（表情3パターン） */
     .eyes{
@@ -217,14 +193,7 @@
     }
 
     /* 表情：にっこり */
-    .expr-smile .eye{
-      width:7px;
-      height:4px;
-      top:4px;
-      background: transparent;
-      border-top: 2px solid #2b1f12;
-      border-radius: 999px;
-    }
+    .expr-smile .eye{ height:2px; border-radius:999px; top:4px; background:#2b1f12; }
     .expr-smile .mouth{
       border-color: transparent transparent #b3121b transparent;
       border-radius: 0 0 12px 12px;
@@ -247,23 +216,6 @@
       border: 2px solid rgba(179,18,27,.75);
       border-radius: 50%;
       top:37px;
-    }
-    .expr-big-smile .eye{
-      width:9px;
-      height:5px;
-      top:3px;
-      background: transparent;
-      border-top: 2px solid #2b1f12;
-      border-radius: 999px;
-    }
-    .expr-big-smile .eye.left{ left:-1px; }
-    .expr-big-smile .eye.right{ right:-1px; }
-    .expr-big-smile .mouth{
-      width:16px;
-      height:12px;
-      border-color: transparent transparent #b3121b transparent;
-      border-radius: 0 0 14px 14px;
-      top:36px;
     }
 
     .top{
@@ -291,83 +243,6 @@
       border-radius: 6px;
       transform: rotate(-10deg);
       box-shadow: 0 6px 12px rgba(0,0,0,.12);
-    }
-    .sparkles{
-      position:absolute;
-      inset:-22px;
-      pointer-events:none;
-      opacity:0;
-      filter: drop-shadow(0 0 10px rgba(255,217,102,.65));
-    }
-    .sparkle{
-      position:absolute;
-      width:14px; height:14px;
-      background: radial-gradient(circle, rgba(255,255,255,1), rgba(255,235,140,.98) 35%, rgba(255,214,97,.92) 58%, rgba(255,214,97,0) 76%);
-      clip-path: polygon(50% 0%, 62% 36%, 100% 50%, 62% 64%, 50% 100%, 38% 64%, 0% 50%, 38% 36%);
-      opacity:0;
-      mix-blend-mode: screen;
-    }
-    .sparkle.s1{ left:-10px; top:0; }
-    .sparkle.s2{ right:-8px; top:4px; width:16px; height:16px; }
-    .sparkle.s3{ left:0; bottom:0; width:12px; height:12px; }
-    .sparkle.s4{ right:-4px; bottom:2px; }
-    .sparkle.s5{ left:24px; top:-14px; width:18px; height:18px; }
-
-    .pose-smile .armL{ transform: rotate(8deg); }
-    .pose-smile .armR{ transform: rotate(-8deg); }
-    .pose-cheer .armL{ animation: cheerArmLeft .9s ease-in-out infinite alternate; }
-    .pose-cheer .armR{ animation: cheerArmRight .9s ease-in-out infinite alternate; }
-    .pose-dance{ animation: mikoDance 1s ease-in-out infinite; }
-    .pose-dance .armL{ animation: danceArmLeft .75s ease-in-out infinite alternate; }
-    .pose-dance .armR{ animation: danceArmRight .75s ease-in-out infinite alternate; }
-    .pose-dance-rare{ animation: mikoDanceRare .85s ease-in-out infinite; }
-    .pose-dance-rare .armL{ animation: danceArmLeft .5s ease-in-out infinite alternate; }
-    .pose-dance-rare .armR{ animation: danceArmRight .5s ease-in-out infinite alternate; }
-    .pose-dance-rare .paperMini{ animation: paperWave .55s ease-in-out infinite alternate; }
-    .pose-dance-rare .sparkles{ opacity:1; }
-    .pose-dance-rare .sparkle{ animation: sparkleFloat .95s ease-in-out infinite; }
-    .pose-dance-rare .sparkle.s1{ animation-delay:.05s; }
-    .pose-dance-rare .sparkle.s2{ animation-delay:.18s; }
-    .pose-dance-rare .sparkle.s3{ animation-delay:.28s; }
-    .pose-dance-rare .sparkle.s4{ animation-delay:.42s; }
-    .pose-dance-rare .sparkle.s5{ animation-delay:.56s; }
-
-    @keyframes cheerArmLeft{
-      from{ transform: rotate(8deg) translateY(0); }
-      to{ transform: rotate(-18deg) translateY(-2px); }
-    }
-    @keyframes cheerArmRight{
-      from{ transform: rotate(-8deg) translateY(0); }
-      to{ transform: rotate(18deg) translateY(-2px); }
-    }
-    @keyframes mikoDance{
-      0%,100%{ transform: rotate(0deg) translateY(0); }
-      25%{ transform: rotate(-5deg) translateY(-2px); }
-      75%{ transform: rotate(5deg) translateY(-2px); }
-    }
-    @keyframes mikoDanceRare{
-      0%,100%{ transform: rotate(0deg) translateY(0) scale(1); }
-      25%{ transform: rotate(-7deg) translateY(-3px) scale(1.02); }
-      50%{ transform: rotate(0deg) translateY(-1px) scale(1.04); }
-      75%{ transform: rotate(7deg) translateY(-3px) scale(1.02); }
-    }
-    @keyframes danceArmLeft{
-      from{ transform: rotate(30deg) translateY(-1px); }
-      to{ transform: rotate(-38deg) translateY(-4px); }
-    }
-    @keyframes danceArmRight{
-      from{ transform: rotate(-30deg) translateY(-1px); }
-      to{ transform: rotate(38deg) translateY(-4px); }
-    }
-    @keyframes paperWave{
-      from{ transform: rotate(-18deg) translateY(0); }
-      to{ transform: rotate(8deg) translateY(-2px); }
-    }
-    @keyframes sparkleFloat{
-      0%{ opacity:0; transform: translateY(10px) scale(.45) rotate(0deg); }
-      25%{ opacity:1; transform: translateY(0) scale(1.15) rotate(18deg); }
-      60%{ opacity:1; transform: translateY(-12px) scale(1) rotate(38deg); }
-      100%{ opacity:0; transform: translateY(-26px) scale(.7) rotate(64deg); }
     }
 
     .mikoBubble{
@@ -553,9 +428,8 @@
 
     <!-- ★ ボタン2つ：引く / もう一度（リセット） -->
     <div class="btnRow">
-      <div class="btnPrimaryWrap">
-        <button id="drawBtn" onclick="draw()">縁結びを祈って引く</button>
-      </div>
+      <button id="drawBtn" onclick="draw()">縁結びを祈って引く</button>
+      <button class="secondary" id="resetBtn" onclick="resetOmikuji()">もう一度（戻る）</button>
     </div>
 
     <!-- ★ 巫女さん -->
@@ -565,7 +439,6 @@
           <div class="hair"></div>
           <div class="sideL"></div><div class="sideR"></div>
           <div class="face"></div>
-          <div class="armL"></div><div class="armR"></div>
 
           <!-- 表情パーツ -->
           <div class="eyes">
@@ -577,13 +450,6 @@
           <div class="top"></div>
           <div class="skirt"></div>
           <div class="paperMini"></div>
-          <div class="sparkles" aria-hidden="true">
-            <div class="sparkle s1"></div>
-            <div class="sparkle s2"></div>
-            <div class="sparkle s3"></div>
-            <div class="sparkle s4"></div>
-            <div class="sparkle s5"></div>
-          </div>
         </div>
         <div class="mikoBubble">
           <div class="mikoName">巫女</div>
@@ -636,16 +502,15 @@
       </section>
     </div>
 
-    <div class="note">※ 下のボタンから、もう一度おみくじを引く画面を開けます</div>
+    <div class="note">※「もう一度（戻る）」で引く前の画面に戻れます</div>
     <div class="compareNav" aria-label="比較ページへのリンク">
-      <a href="./graduate.html">もう一度おみくじを引く</a>
+      <a href="./graduate.html">卒業前版のおみくじを見る</a>
     </div>
   </main>
 
   <script>
     const STATUS_RANGE = {
       "大吉": { bond:[82, 98], hearts:[4,5], stars:[4,5] },
-      "吉":   { bond:[74, 90], hearts:[3,5], stars:[3,5] },
       "中吉": { bond:[65, 85], hearts:[3,5], stars:[3,4] },
       "小吉": { bond:[48, 72], hearts:[2,4], stars:[2,4] },
       "末吉": { bond:[35, 60], hearts:[1,3], stars:[1,3] },
@@ -663,67 +528,29 @@
       return s;
     }
 
-    const MIKO_EXPRESSIONS = ["expr-smile", "expr-neutral", "expr-surprise", "expr-big-smile"];
-    const MIKO_POSES = ["pose-smile", "pose-cheer", "pose-dance", "pose-dance-rare"];
-
-    function setMikoPerformance(grade){
+    // 表情3パターン：smile / neutral / surprise
+    const EXPRESSIONS = ["expr-smile", "expr-neutral", "expr-surprise"];
+    function setMikoExpression(){
       const avatar = document.getElementById("mikoAvatar");
-      MIKO_EXPRESSIONS.forEach(c => avatar.classList.remove(c));
-      MIKO_POSES.forEach(c => avatar.classList.remove(c));
-
-      const isRareDaikichi = grade === "大吉" && randInt(1, 8) === 1;
-
-      if(grade === "大吉" && isRareDaikichi){
-        avatar.classList.add("expr-big-smile", "pose-dance-rare");
-        return "「大吉です。祝福の舞をお届けしますね。」";
-      }
-      if(grade === "大吉"){
-        avatar.classList.add("expr-big-smile", "pose-smile");
-        return "「今日は大吉。とても良い流れですよ。」";
-      }
-      if(grade === "吉" || grade === "中吉" || grade === "小吉"){
-        avatar.classList.add("expr-smile", "pose-smile");
-        return `「今日は${grade}です。やさしく進めていきましょう。」`;
-      }
-      if(grade === "末吉"){
-        avatar.classList.add("expr-smile", "pose-cheer");
-        return "「末吉です。少しずつ整えていけば大丈夫ですよ。」";
-      }
-
-      avatar.classList.add("expr-smile", "pose-dance");
-      return "「凶でも大丈夫。ここから整えていきましょうね。」";
+      // いったん全部外す
+      EXPRESSIONS.forEach(c => avatar.classList.remove(c));
+      // ランダムで付ける
+      const cls = EXPRESSIONS[randInt(0, EXPRESSIONS.length - 1)];
+      avatar.classList.add(cls);
+      return cls;
     }
 
     // 例（授業用に短く）：必要なら以前の大量fortunesに差し替えOK
     const fortunes = [
       { grade:"大吉", meet:"良縁が近い。紹介や偶然の出会いが起こりやすい。", progress:"素直な一言が鍵。", compat:"自然体でいられる相手が吉。", action:"お礼のメッセージ／笑顔", message:"願いは通じやすい日。"},
-      { grade:"吉", meet:"落ち着いたご縁が育ちやすい日。身近な会話から流れが変わります。", progress:"急がず素直に向き合うほど、自然に距離が縮まります。", compat:"安心して話せる相手が吉。", action:"さりげない気づかいを言葉にする", message:"背伸びしない優しさが運を引き寄せます。"},
       { grade:"中吉", meet:"身近なコミュニティにヒント。", progress:"焦らず段階を踏むと良い。", compat:"趣味が合う相手が吉。", action:"共通の話題を増やす", message:"丁寧さが勝ちます。"},
       { grade:"小吉", meet:"見落とし注意。第一印象だけで判断しないで。", progress:"安心感づくりが先。", compat:"聞き上手な相手が吉。", action:"挨拶／感謝を言葉に", message:"急がず整える日。"},
       { grade:"末吉", meet:"種まきの時期。", progress:"深追いせず次につながる会話を。", compat:"穏やかな価値観の人が吉。", action:"身だしなみを整える", message:"整えるほど運が上がります。"},
       { grade:"凶", meet:"無理に追わないでOK。", progress:"誤解が起きやすいので慎重に。", compat:"安心をくれる人が吉。", action:"温かい飲み物／休息", message:"休む勇気が縁を呼びます。"}
     ];
 
-    const GRADE_WEIGHTS = {
-      "大吉": 2,
-      "吉": 5,
-      "中吉": 5,
-      "小吉": 3,
-      "末吉": 3,
-      "凶": 1
-    };
-
-    function pickFortune(){
-      const weightedPool = fortunes.flatMap((fortune) => {
-        const weight = GRADE_WEIGHTS[fortune.grade] || 1;
-        return Array(weight).fill(fortune);
-      });
-      return weightedPool[randInt(0, weightedPool.length - 1)];
-    }
-
     const gradeColor = (grade) => {
       if (grade === "大吉") return "#b3121b";
-      if (grade === "吉") return "#a63a4b";
       if (grade === "中吉") return "#8b1d3b";
       if (grade === "小吉") return "#2b1f12";
       if (grade === "末吉") return "#5a3b2a";
@@ -747,16 +574,24 @@
     }
 
     function draw(){
+      // 表情をランダムに変更
+      const expr = setMikoExpression();
+
       // おみくじ内容をランダム抽選
-      const f = pickFortune();
-      const performanceMessage = setMikoPerformance(f.grade);
+      const f = fortunes[randInt(0, fortunes.length - 1)];
 
       // ステータスも運勢に合わせてランダム生成
       const r = STATUS_RANGE[f.grade];
       const bond = randInt(r.bond[0], r.bond[1]);
       const hearts = randInt(r.hearts[0], r.hearts[1]);
       const stars  = randInt(r.stars[0], r.stars[1]);
-      showMiko(performanceMessage);
+
+      // 巫女さんセリフ（表情に合わせて少し変える）
+      const faceLine =
+        (expr === "expr-smile") ? "にこにこ" :
+        (expr === "expr-surprise") ? "びっくり" : "おだやか";
+
+      showMiko(`（${faceLine}顔の巫女）「こちら、恋みくじです。今日は『${f.grade}』ですよ。」`);
 
       // 表示反映
       const gradeEl = document.getElementById("grade");
@@ -781,8 +616,7 @@
     function resetOmikuji(){
       // 巫女さんを初期セリフに戻す（表情も初期＝neutral）
       const avatar = document.getElementById("mikoAvatar");
-      MIKO_EXPRESSIONS.forEach(c => avatar.classList.remove(c));
-      MIKO_POSES.forEach(c => avatar.classList.remove(c));
+      EXPRESSIONS.forEach(c => avatar.classList.remove(c));
       avatar.classList.add("expr-neutral");
       showMiko("「縁結びを願って…ボタンを押してくださいね。」");
 
